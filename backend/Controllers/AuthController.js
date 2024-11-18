@@ -3,6 +3,66 @@ const jwt = require('jsonwebtoken');
 const UserModel = require("../Models/User");
 
 
+const signupAdmin = async (req, res) => {
+    try {
+        const { name, email, password, role, contact, city, address,nic,dob } = req.body;
+
+        // Ensure the role is 'admin' for this specific endpoint
+        if (role !== 'ADMIN') {
+            return res.status(400).json({
+                message: "Invalid role. Only 'admin' registration is allowed here.",
+                success: false
+            });
+        }
+
+        // Check if the email already exists
+        const user = await UserModel.findOne({ email });
+        if (user) {
+            return res.status(409).json({
+                message: 'User already exists, you can log in',
+                success: false
+            });
+        }
+
+        // Retrieve the last admin ID and generate the next admin ID
+        const lastAdmin = await UserModel.findOne({ role: 'ADMIN' })
+            .sort({ adminId: -1 }) // Sort by adminId in descending order
+            .exec();
+
+        let newAdminId = "A001"; // Default ID if no admin exists yet
+        if (lastAdmin && lastAdmin.adminId) {
+            const lastIdNumber = parseInt(lastAdmin.adminId.substring(1)); // Extract numeric part
+            newAdminId = `A${String(lastIdNumber + 1).padStart(3, '0')}`; // Increment and format
+        }
+
+        // Create a new admin user
+        const userModel = new UserModel({ name, email, password, role, adminId: newAdminId , contact, city, address,nic,dob});
+        userModel.password = await bcrypt.hash(password, 10); // Hash the password
+        await userModel.save();
+
+        // Respond with success and include the generated adminId
+        res.status(201).json({
+            message: "Signup successfully",
+            success: true,
+            adminId: newAdminId
+        });
+    } catch (err) {
+        console.error("Error during admin signup:", err);
+        res.status(500).json({
+            message: "Internal server error",
+            success: false
+        });
+    }
+};
+
+module.exports = { signupAdmin };
+
+
+
+
+
+
+
 const signup = async (req, res) => {
     try {
         const { name, email, password,role } = req.body;
@@ -49,15 +109,23 @@ const login = async (req, res) => {
             { expiresIn: '24h' }
         )
 
-        res.status(200)
-            .json({
-                message: "Login Success",
-                success: true,
-                jwtToken,
-                email,
-                name: user.name,
-                role: user.role
-            })
+         // Prepare the response object
+         const response = {
+            message: "Login Success",
+            success: true,
+            jwtToken,
+            email: user.email,
+            name: user.name,
+            role: user.role,
+        };
+
+        // If the user's role is ADMIN, include the adminId in the response
+        if (user.role === 'ADMIN') {
+            response.adminId = user.adminId; // Assuming `_id` is the adminId
+        }
+
+        // Send the response
+        res.status(200).json(response);
     } catch (err) {
         console.error('Login Error:', err);
         res.status(500)
@@ -70,5 +138,6 @@ const login = async (req, res) => {
 
 module.exports = {
     signup,
-    login
+    login,
+    signupAdmin
 }
