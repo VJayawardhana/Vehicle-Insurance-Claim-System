@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Layout, Menu, Dropdown, Space } from 'antd';
-// import logo from '../../assets/images/logo4.png'; // path to logo file
+import logo from '../../assets/images/cover360.png'; // path to logo file
 import { useAuth } from '../../hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 
@@ -118,14 +118,14 @@ const AppHeader = ({ onMenuClick }) => {
     >
       <div style={{ display: 'flex', alignItems: 'center' }}>
         <img
-        //   src={logo}
+          src={logo}
           alt="Logo"
-          style={{ height: '50px', cursor: 'pointer' }}
+          style={{ height: '100px', cursor: 'pointer' }}
           onClick={toggleSidebar}
         />
         {!isSidebarFolded && (
           <span style={{ color: '#967AA1', fontSize: '24px', marginLeft: '5px' }}>
-            MaternEase
+            Cover 360
           </span>
         )}
       </div>

@@ -1,7 +1,9 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import './CSS/Home.css';
-import logo from '../assets/images/logo4.png';
+import logo from '../assets/images/cover360.png';
+// import logo from '../assets/images/';
+
 import hero from '../assets/images/home/baby.jpg';
 import service1 from '../assets/images/home/service 1.png';
 import service2 from '../assets/images/home/service 2.png';
@@ -19,8 +21,8 @@ const Home = () => {
             {/* Navbar Section */}
             <header className="header">
                 <img src={logo} alt="Maternease Logo" className="logo"/>
-                <span className="name" style={{color: '#967AA1', fontSize: '25px'}}>MaternEase</span>
-
+                <span className="name" style={{color: '#1e90ff', fontSize: '25px'}}>Cover360</span>  
+                {/* #1e90ff */}
                 <nav className="navbar">
                     <a href="#about">About Us</a>
                     <a href="#mission">Mission</a>

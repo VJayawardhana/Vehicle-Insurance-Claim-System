@@ -51,6 +51,8 @@ const Sidebar = ({ collapsed, userType }) => {
       case "ADMIN":
         return [
           { key: "/admin/dashboard", icon: <DashboardOutlinedIcon style={iconStyle} />, label: <Link to="/admin/dashboard">Dashboard</Link> },
+          { key: "/admin/profile", icon: <DashboardOutlinedIcon style={iconStyle} />, label: <Link to="/admin/profile">Profile</Link> },
+
         ];
       case "HCADJUSTER":
         return [
